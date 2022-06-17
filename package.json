@@ -1,0 +1,30 @@
+{
+    "name": "genius-car-service-server",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js",
+        "start-dev": "nodemon index.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/wpshamim/genius-car-service-server.git"
+    },
+    "keywords": [
+        "service",
+        "car"
+    ],
+    "author": "shamim reza",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/wpshamim/genius-car-service-server/issues"
+    },
+    "homepage": "https://github.com/wpshamim/genius-car-service-server#readme",
+    "dependencies": {
+        "cors": "^2.8.5",
+        "express": "^4.18.1",
+        "nodemon": "^2.0.16"
+    }
+}
