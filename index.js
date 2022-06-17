@@ -1,11 +1,50 @@
 const express = require("express");
-var bodyParser = require("body-parser");
 var cors = require("cors");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const app = express();
-const port = 5000;
+const port = process.env.PORT || 5000;
 
-app.use(bodyParser.json());
+// Middleware
+app.use(express.json());
 app.use(cors());
+
+const uri = `mongodb+srv://genius-car-service:F2PWvqoBuuFQzI2x@cluster0.yanaeka.mongodb.net`;
+
+const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
+
+async function run() {
+    try {
+        await client.connect();
+
+        const serviceCollections = client.db("geniusCar").collection("services");
+
+        app.get("/services", async (req, res) => {
+            const query = {};
+            const cursor = serviceCollections.find(query);
+            const services = await cursor.toArray();
+            res.send(services);
+        });
+
+        app.get("/service/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const service = await serviceCollections.findOne(query);
+            res.send(service);
+        });
+
+        app.post("/addService", async (req, res) => {
+            const addedService = req.body;
+            const result = await serviceCollections.insertOne(addedService);
+            res.send(result);
+        });
+    } finally {
+        // await client.close();
+    }
+}
+run().catch(console.dir);
+
+// user: genius-car-service
+// password: F2PWvqoBuuFQzI2x
 
 app.get("/", (req, res) => res.send("Hello World!"));
 
