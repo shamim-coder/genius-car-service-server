@@ -1,5 +1,6 @@
 const express = require("express");
 var cors = require("cors");
+require("dotenv").config();
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const app = express();
 const port = process.env.PORT || 5000;
@@ -8,7 +9,7 @@ const port = process.env.PORT || 5000;
 app.use(express.json());
 app.use(cors());
 
-const uri = `mongodb+srv://genius-car-service:F2PWvqoBuuFQzI2x@cluster0.yanaeka.mongodb.net`;
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.yanaeka.mongodb.net`;
 
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
@@ -35,6 +36,13 @@ async function run() {
         app.post("/addService", async (req, res) => {
             const addedService = req.body;
             const result = await serviceCollections.insertOne(addedService);
+            res.send(result);
+        });
+
+        app.delete("/deleteService/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await serviceCollections.deleteOne(query);
             res.send(result);
         });
     } finally {
